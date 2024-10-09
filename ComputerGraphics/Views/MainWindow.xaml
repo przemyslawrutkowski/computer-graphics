@@ -1,0 +1,45 @@
+﻿<Window x:Class="ComputerGraphics.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComputerGraphics"
+        xmlns:models="clr-namespace:ComputerGraphics.Models"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBarTray Grid.Row="0" Background="LightGray">
+            <ToolBar>
+                <Button Content="Select" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.select}"/>
+                <Button Content="Rectangle" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.drawRectangle}"/>
+                <Button Content="Ellipse" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.drawEllipse}"/>
+                <Button Content="Line" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.drawLine}"/>
+                <Button Content="Freehand" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.drawFreehand}"/>
+                <Button Content="Add Text" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.addText}"/>
+                <Button Content="Save Image" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:OperationType.saveImage}"/>
+            </ToolBar>
+        </ToolBarTray>
+        <Canvas Grid.Row="1" Background="White"
+        MouseDown="Canvas_MouseDown"
+        MouseMove="Canvas_MouseMove"
+        MouseUp="Canvas_MouseUp">
+            <ItemsControl ItemsSource="{Binding Shapes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentPresenter Content="{Binding}">
+                        </ContentPresenter>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>
+    </Grid>
+</Window>

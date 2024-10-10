@@ -1,4 +1,5 @@
-﻿using ComputerGraphics.ViewModels;
+﻿using ComputerGraphics.Models;
+using ComputerGraphics.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,7 +10,9 @@ namespace ComputerGraphics.Views
         public MainWindow()
         {
             InitializeComponent();
-            MainWindowViewModel viewModel = new MainWindowViewModel();
+            IShapeFactory shapeFactory = new ShapeFactory();
+            IShapeUpdater shapeUpdater = new ShapeUpdater();
+            MainWindowViewModel viewModel = new MainWindowViewModel(shapeFactory, shapeUpdater);
             DataContext = viewModel;
         }
 

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace ComputerGraphics.ViewModels
@@ -11,28 +12,36 @@ namespace ComputerGraphics.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<UIElement> Shapes { get; set; }
-        public ICommand SetOperationCommand { get; set; }
-        private OperationType _currentOperationType;
 
-        // Necessary for drawing shapes
+        private OperationType? _currentOperationType;
+        private Point? _initialPosition;
+        private Thickness? _initialMargin;
+
+        public ICommand SetOperationCommand { get; set; }
         public ICommand MouseDownCommand { get; set; }
         public ICommand MouseMoveCommand { get; set; }
         public ICommand MouseUpCommand { get; set; }
+
         private UIElement? _currentShape;
-        private Point _startPoint;
-
-        // Necessary for changing the position of the shape
         private UIElement? _selectedShape;
-        private Point _initialMousePosition;
-        private Thickness _initialMargin;
+        private TextBox? _textBox;
 
-        public MainWindowViewModel()
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeUpdater _shapeUpdater;
+
+        public MainWindowViewModel(IShapeFactory shapeFactory, IShapeUpdater shapeUpdater)
         {
+            _shapeFactory = shapeFactory;
+            _shapeUpdater = shapeUpdater;
+
             Shapes = new ObservableCollection<UIElement>();
+
             SetOperationCommand = new RelayCommand(SetOperation);
             MouseDownCommand = new RelayCommand(OnMouseDown);
             MouseMoveCommand = new RelayCommand(OnMouseMove);
             MouseUpCommand = new RelayCommand(OnMouseUp);
+
+            ResetState();
         }
 
         private void SetOperation(object? parameter)
@@ -45,61 +54,93 @@ namespace ComputerGraphics.ViewModels
 
         private void OnMouseDown(object? parameter)
         {
-            if (parameter is MouseButtonEventArgs mouseEventArgs)
+            if (parameter is MouseButtonEventArgs mouseEventArgs && mouseEventArgs.Source is Canvas canvas)
             {
-                if (mouseEventArgs.Source is Canvas canvas)
+                _initialPosition = mouseEventArgs.GetPosition(canvas);
+                if (_textBox != null && !_textBox.IsMouseOver)
                 {
-                    _startPoint = mouseEventArgs.GetPosition(canvas);
-                    if (_currentOperationType == OperationType.select)
-                    {
-                        _selectedShape = GetShapeAtPoint(_startPoint);
-                        if (_selectedShape != null)
+                    ReplaceTextBoxWithTextBlock();
+                }
+                switch (_currentOperationType)
+                {
+                    case OperationType.select:
+                        _selectedShape = GetShapeAtPoint(_initialPosition.Value);
+                        if (_selectedShape is FrameworkElement frameworkElement)
                         {
-                            _initialMousePosition = _startPoint;
-                            if (_selectedShape is FrameworkElement frameworkElement)
-                            {
-                                _initialMargin = frameworkElement.Margin;
-                            }
+                            _initialMargin = frameworkElement.Margin;
                         }
-                    }
-                    else
-                    {
-                        _currentShape = CreateShape(_startPoint, _startPoint);
+                        break;
+                    case OperationType.drawRectangle:
+                    case OperationType.drawEllipse:
+                    case OperationType.drawLine:
+                        _currentShape = _shapeFactory.CreateShape(_currentOperationType.Value, _initialPosition.Value);
                         if (_currentShape != null)
                         {
                             Shapes.Add(_currentShape);
                         }
-                    }
+                        break;
+                    case OperationType.addText:
+                        if (_textBox == null)
+                        {
+                            _textBox = new TextBox
+                            {
+                                Width = 0,
+                                Height = 0,
+                                AcceptsReturn = true,
+                                Margin = new Thickness(_initialPosition.Value.X, _initialPosition.Value.Y, 0, 0),
+                                Background = Brushes.Transparent
+                            };
+                            Shapes.Add(_textBox);
+                        }
+                        break;
                 }
             }
         }
 
         private void OnMouseMove(object? parameter)
         {
-            if (parameter is MouseEventArgs mouseEventArgs)
+            if (parameter is MouseEventArgs mouseEventArgs && mouseEventArgs.Source is Canvas canvas)
             {
-                if (mouseEventArgs.Source is Canvas canvas)
-                {
-                    var currentPoint = mouseEventArgs.GetPosition(canvas);
+                var currentPosition = mouseEventArgs.GetPosition(canvas);
 
-                    if (_selectedShape != null && _currentOperationType == OperationType.select)
+                if (_initialPosition.HasValue)
+                {
+                    switch (_currentOperationType)
                     {
-                        if (_selectedShape is FrameworkElement element)
-                        {
-                            var offsetX = currentPoint.X - _initialMousePosition.X;
-                            var offsetY = currentPoint.Y - _initialMousePosition.Y;
-                            element.Margin = new Thickness(
-                                _initialMargin.Left + offsetX,
-                                _initialMargin.Top + offsetY,
-                                0,
-                                0
-                            );
-                        }
-                    }
-                    else if (_currentShape != null)
-                    {
-                        UpdateShape(_currentShape, _startPoint, currentPoint);
-                        OnPropertyChanged(nameof(Shapes));
+                        case OperationType.select:
+                            if (_selectedShape is FrameworkElement element && _initialMargin.HasValue)
+                            {
+                                var offsetX = currentPosition.X - _initialPosition.Value.X;
+                                var offsetY = currentPosition.Y - _initialPosition.Value.Y;
+                                element.Margin = new Thickness(
+                                    _initialMargin.Value.Left + offsetX,
+                                    _initialMargin.Value.Top + offsetY,
+                                    0,
+                                    0
+                                );
+                            }
+                            break;
+                        case OperationType.drawRectangle:
+                        case OperationType.drawEllipse:
+                        case OperationType.drawLine:
+                            if (_currentShape != null)
+                            {
+                                _shapeUpdater.UpdateShape(_currentShape, _initialPosition.Value, currentPosition);
+                            }
+                            break;
+                        case OperationType.addText:
+                            if (_textBox != null)
+                            {
+                                _textBox.Width = Math.Abs(currentPosition.X - _initialPosition.Value.X);
+                                _textBox.Height = Math.Abs(currentPosition.Y - _initialPosition.Value.Y);
+                                _textBox.Margin = new Thickness(
+                                    Math.Min(_initialPosition.Value.X, currentPosition.X),
+                                    Math.Min(_initialPosition.Value.Y, currentPosition.Y),
+                                    0,
+                                    0
+                                );
+                            }
+                            break;
                     }
                 }
             }
@@ -107,81 +148,20 @@ namespace ComputerGraphics.ViewModels
 
         private void OnMouseUp(object? parameter)
         {
+            if (_textBox != null)
+            {
+                _textBox.Focus();
+            }
+
+            ResetState();
+        }
+
+        private void ResetState()
+        {
             _currentShape = null;
             _selectedShape = null;
-        }
-
-        private UIElement? CreateShape(Point startPoint, Point endPoint)
-        {
-            UIElement? shape = null;
-            switch (_currentOperationType)
-            {
-                case OperationType.drawRectangle:
-                    shape = new Rectangle
-                    {
-                        Stroke = System.Windows.Media.Brushes.Black,
-                        StrokeThickness = 2,
-                        Width = 0,
-                        Height = 0,
-                        Margin = new Thickness(startPoint.X, startPoint.Y, 0, 0)
-                    };
-                    break;
-                case OperationType.drawEllipse:
-                    shape = new Ellipse
-                    {
-                        Stroke = System.Windows.Media.Brushes.Black,
-                        StrokeThickness = 2,
-                        Width = 0,
-                        Height = 0,
-                        Margin = new Thickness(startPoint.X, startPoint.Y, 0, 0)
-                    };
-                    break;
-                case OperationType.drawLine:
-                    shape = new Line
-                    {
-                        Stroke = System.Windows.Media.Brushes.Black,
-                        StrokeThickness = 2,
-                        X1 = startPoint.X,
-                        Y1 = startPoint.Y,
-                        X2 = startPoint.X,
-                        Y2 = startPoint.Y
-                    };
-                    break;
-                case OperationType.addText:
-                    shape = new TextBlock
-                    {
-                        Text = "Sample Text",
-                        Margin = new Thickness(startPoint.X, startPoint.Y, 0, 0)
-                    };
-                    break;
-            }
-
-            return shape;
-        }
-
-        private void UpdateShape(UIElement shape, Point startPoint, Point endPoint)
-        {
-            if (shape is Rectangle rectangle)
-            {
-                rectangle.Width = Math.Abs(endPoint.X - startPoint.X);
-                rectangle.Height = Math.Abs(endPoint.Y - startPoint.Y);
-                rectangle.Margin = new Thickness(Math.Min(startPoint.X, endPoint.X), Math.Min(startPoint.Y, endPoint.Y), 0, 0);
-            }
-            else if (shape is Ellipse ellipse)
-            {
-                ellipse.Width = Math.Abs(endPoint.X - startPoint.X);
-                ellipse.Height = Math.Abs(endPoint.Y - startPoint.Y);
-                ellipse.Margin = new Thickness(Math.Min(startPoint.X, endPoint.X), Math.Min(startPoint.Y, endPoint.Y), 0, 0);
-            }
-            else if (shape is Line line)
-            {
-                line.X2 = endPoint.X;
-                line.Y2 = endPoint.Y;
-            }
-            else if (shape is TextBlock textBlock)
-            {
-                textBlock.Margin = new Thickness(startPoint.X, startPoint.Y, 0, 0);
-            }
+            _initialPosition = null;
+            _initialMargin = null;
         }
 
         private UIElement? GetShapeAtPoint(Point point)
@@ -211,6 +191,23 @@ namespace ComputerGraphics.ViewModels
                 }
             }
             return null;
+        }
+
+        private void ReplaceTextBoxWithTextBlock()
+        {
+            if (_textBox != null)
+            {
+                var textBlock = new TextBlock
+                {
+                    Text = _textBox.Text,
+                    Margin = _textBox.Margin,
+                    TextWrapping = TextWrapping.Wrap
+                };
+
+                Shapes.Remove(_textBox);
+                Shapes.Add(textBlock);
+                _textBox = null;
+            }
         }
     }
 }

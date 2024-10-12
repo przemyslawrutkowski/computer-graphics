@@ -1,12 +1,11 @@
 ﻿namespace ComputerGraphics.Models
 {
-    public enum OperationType
+    public enum Operation
     {
         select,
         drawRectangle,
         drawEllipse,
         drawLine,
-        drawFreehand,
         addText,
         saveImage
     }

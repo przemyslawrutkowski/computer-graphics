@@ -70,13 +70,18 @@ namespace ComputerGraphics.ViewModels
                 switch (_currentOperation)
                 {
                     case Operation.select:
+                        if (_selectedElement != null && _initialPosition.HasValue)
+                        {
+                            _elementUpdater.MoveElement(_selectedElement, _initialPosition.Value, currentPosition);
+                            _initialPosition = currentPosition;
+                        }
                         break;
                     case Operation.drawRectangle:
                     case Operation.drawEllipse:
                     case Operation.drawLine:
                         if (_selectedElement != null && _initialPosition.HasValue)
                         {
-                            _elementUpdater.UpdateElement(_selectedElement, _initialPosition.Value, currentPosition);
+                            _elementUpdater.SetElement(_selectedElement, _initialPosition.Value, currentPosition);
                         }
                         break;
                     case Operation.addText:
@@ -102,8 +107,8 @@ namespace ComputerGraphics.ViewModels
             {
                 if (element.UIElement is FrameworkElement frameworkElement)
                 {
-                    var left = frameworkElement.Margin.Left;
-                    var top = frameworkElement.Margin.Top;
+                    var left = element.X;
+                    var top = element.Y;
                     var right = left + frameworkElement.Width;
                     var bottom = top + frameworkElement.Height;
 

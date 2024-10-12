@@ -5,12 +5,13 @@ namespace ComputerGraphics.Models
 {
     public interface IElementUpdater
     {
-        void UpdateElement(Element element, Point initialPosition, Point finalPosition);
+        void SetElement(Element element, Point initialPosition, Point currentPosition);
+        void MoveElement(Element element, Point initialPosition, Point currentPosition);
     }
 
     public class ElementUpdater : IElementUpdater
     {
-        public void UpdateElement(Element element, Point initialPosition, Point currentPosition)
+        public void SetElement(Element element, Point initialPosition, Point currentPosition)
         {
             switch (element.UIElement)
             {
@@ -41,8 +42,17 @@ namespace ComputerGraphics.Models
                     element.Y = Math.Min(y1, y2);
                     break;
                 default:
-                    throw new NotSupportedException($"Element type {element.GetType()} is not supported");
+                    throw new NotSupportedException($"Element type {element.UIElement.GetType()} is not supported");
             }
+        }
+
+        public void MoveElement(Element element, Point initialPosition, Point currentPosition)
+        {
+            var offsetX = currentPosition.X - initialPosition.X;
+            var offsetY = currentPosition.Y - initialPosition.Y;
+
+            element.X += offsetX;
+            element.Y += offsetY;
         }
     }
 }

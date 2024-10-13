@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -44,6 +45,15 @@ namespace ComputerGraphics.Models
                         Y1 = currentPosition.Y,
                         X2 = currentPosition.X,
                         Y2 = currentPosition.Y
+                    };
+                    break;
+                case Operation.addText:
+                    uiElement = new TextBox
+                    {
+                        Width = 0,
+                        Height = 0,
+                        AcceptsReturn = true,
+                        Background = Brushes.Transparent,
                     };
                     break;
                 default:

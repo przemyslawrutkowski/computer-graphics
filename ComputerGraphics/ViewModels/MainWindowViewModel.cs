@@ -2,7 +2,7 @@
 using ComputerGraphics.MVVM;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Shapes;
+using System.Windows.Controls;
 
 namespace ComputerGraphics.ViewModels
 {
@@ -13,6 +13,7 @@ namespace ComputerGraphics.ViewModels
         private Operation? _currentOperation;
         private Element? _selectedElement;
         private Point? _initialPosition;
+        private Element? _textBox;
 
         public DelegateCommand SetOperationCommand { get; set; }
 
@@ -41,6 +42,11 @@ namespace ComputerGraphics.ViewModels
         {
             if (parameter is Point currentPosition)
             {
+                if (_textBox != null && IsFocusLost(_textBox, currentPosition))
+                {
+                    OnTextBoxFocusLost();
+                }
+
                 switch (_currentOperation)
                 {
                     case Operation.select:
@@ -58,6 +64,10 @@ namespace ComputerGraphics.ViewModels
                         Elements.Add(_selectedElement);
                         break;
                     case Operation.addText:
+                        _selectedElement = _elementsFactory.CreateElement(_currentOperation.Value, currentPosition);
+                        _initialPosition = currentPosition;
+                        _textBox = _selectedElement;
+                        Elements.Add(_selectedElement);
                         break;
                 }
             }
@@ -85,6 +95,10 @@ namespace ComputerGraphics.ViewModels
                         }
                         break;
                     case Operation.addText:
+                        if (_selectedElement != null && _initialPosition.HasValue)
+                        {
+                            _elementUpdater.SetElement(_selectedElement, _initialPosition.Value, currentPosition);
+                        }
                         break;
                 }
             }
@@ -92,6 +106,10 @@ namespace ComputerGraphics.ViewModels
 
         public void OnMouseUp(object? parameter)
         {
+            if (_textBox != null && _textBox.UIElement is TextBox textBox)
+            {
+                textBox.Focus();
+            }
             ResetState();
         }
 
@@ -112,14 +130,14 @@ namespace ComputerGraphics.ViewModels
                     var right = left + frameworkElement.Width;
                     var bottom = top + frameworkElement.Height;
 
-                    if (frameworkElement is Shape shape)
-                    {
-                        var strokeThickness = shape.StrokeThickness;
-                        left -= strokeThickness / 2;
-                        top -= strokeThickness / 2;
-                        right += strokeThickness / 2;
-                        bottom += strokeThickness / 2;
-                    }
+                    //if (frameworkElement is Shape shape)
+                    //{
+                    //    var strokeThickness = shape.StrokeThickness;
+                    //    left -= strokeThickness / 2;
+                    //    top -= strokeThickness / 2;
+                    //    right += strokeThickness / 2;
+                    //    bottom += strokeThickness / 2;
+                    //}
 
                     if (point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom)
                     {
@@ -128,6 +146,39 @@ namespace ComputerGraphics.ViewModels
                 }
             }
             return null;
+        }
+
+        private void OnTextBoxFocusLost()
+        {
+            if (_textBox != null && _textBox.UIElement is TextBox textBox)
+            {
+                var textBlock = new TextBlock
+                {
+                    Text = textBox.Text,
+                };
+                var element = new Element(textBlock)
+                {
+                    X = _textBox.X,
+                    Y = _textBox.Y
+                };
+                Elements.Remove(_textBox);
+                Elements.Add(element);
+                _textBox = null;
+            }
+        }
+
+        private bool IsFocusLost(Element element, Point currentPosition)
+        {
+            if (element != null && element.UIElement is FrameworkElement frameworkElement)
+            {
+                var left = element.X;
+                var top = element.Y;
+                var right = left + frameworkElement.Width;
+                var bottom = top + frameworkElement.Height;
+
+                return currentPosition.X < left || currentPosition.X > right || currentPosition.Y < top || currentPosition.Y > bottom;
+            }
+            return true;
         }
 
     }

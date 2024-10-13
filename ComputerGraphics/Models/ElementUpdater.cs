@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace ComputerGraphics.Models
@@ -40,6 +41,12 @@ namespace ComputerGraphics.Models
 
                     element.X = Math.Min(x1, x2);
                     element.Y = Math.Min(y1, y2);
+                    break;
+                case TextBox textBox:
+                    textBox.Width = Math.Abs(currentPosition.X - initialPosition.X);
+                    textBox.Height = Math.Abs(currentPosition.Y - initialPosition.Y);
+                    element.X = Math.Min(initialPosition.X, currentPosition.X);
+                    element.Y = Math.Min(initialPosition.Y, currentPosition.Y);
                     break;
                 default:
                     throw new NotSupportedException($"Element type {element.UIElement.GetType()} is not supported");

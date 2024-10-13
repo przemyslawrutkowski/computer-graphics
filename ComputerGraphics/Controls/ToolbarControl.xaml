@@ -15,7 +15,7 @@
                 <Button Content="Ellipse" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawEllipse}"/>
                 <Button Content="Line" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawLine}"/>
                 <Button Content="Add Text" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.addText}"/>
-                <Button Content="Save Image" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.saveImage}"/>
+                <Button Content="Save Image" Click="SaveImage"/>
             </ToolBar>
         </ToolBarTray>
     </Grid>

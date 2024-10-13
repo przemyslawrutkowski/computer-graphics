@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:ComputerGraphics.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Canvas Background="White"
+    <Canvas x:Name="MainCanvas"
+            Background="White"
             MouseDown="MouseDownEventHandler"
             MouseMove="MouseMoveEventHandler"
             MouseUp="MouseUpEventHandler">

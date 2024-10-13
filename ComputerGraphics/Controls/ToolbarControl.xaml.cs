@@ -7,9 +7,15 @@ namespace ComputerGraphics.Controls
     /// </summary>
     public partial class ToolbarControl : UserControl
     {
+        public event EventHandler? SaveImageEventHandler;
         public ToolbarControl()
         {
             InitializeComponent();
+        }
+
+        private void SaveImage(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SaveImageEventHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

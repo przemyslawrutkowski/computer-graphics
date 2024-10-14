@@ -3,6 +3,8 @@ using ComputerGraphics.MVVM;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ComputerGraphics.ViewModels
 {
@@ -56,6 +58,7 @@ namespace ComputerGraphics.ViewModels
                             _initialPosition = currentPosition;
                         }
                         break;
+                    case Operation.drawTriangle:
                     case Operation.drawRectangle:
                     case Operation.drawEllipse:
                     case Operation.drawLine:
@@ -86,6 +89,7 @@ namespace ComputerGraphics.ViewModels
                             _initialPosition = currentPosition;
                         }
                         break;
+                    case Operation.drawTriangle:
                     case Operation.drawRectangle:
                     case Operation.drawEllipse:
                     case Operation.drawLine:
@@ -125,27 +129,63 @@ namespace ComputerGraphics.ViewModels
             {
                 if (element.UIElement is FrameworkElement frameworkElement)
                 {
-                    var left = element.X;
-                    var top = element.Y;
-                    var right = left + frameworkElement.Width;
-                    var bottom = top + frameworkElement.Height;
-
-                    //if (frameworkElement is Shape shape)
-                    //{
-                    //    var strokeThickness = shape.StrokeThickness;
-                    //    left -= strokeThickness / 2;
-                    //    top -= strokeThickness / 2;
-                    //    right += strokeThickness / 2;
-                    //    bottom += strokeThickness / 2;
-                    //}
-
-                    if (point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom)
+                    if (frameworkElement is Polygon triangle)
                     {
-                        return element;
+                        if (IsPointInPolygon(point, triangle.Points))
+                        {
+                            return element;
+                        }
+                    }
+                    else
+                    {
+                        var left = element.X;
+                        var top = element.Y;
+                        var right = left + frameworkElement.Width;
+                        var bottom = top + frameworkElement.Height;
+
+                        if (point.X >= left && point.X <= right && point.Y >= top && point.Y <= bottom)
+                        {
+                            return element;
+                        }
                     }
                 }
             }
             return null;
+        }
+
+        private bool IsPointInPolygon(Point point, PointCollection polygonPoints)
+        {
+            int numVertices = polygonPoints.Count;
+            double x = point.X;
+            double y = point.Y;
+            bool inside = false;
+
+            Point p1 = polygonPoints[0];
+            Point p2;
+
+            for (int i = 1; i <= numVertices; i++)
+            {
+                p2 = polygonPoints[i % numVertices];
+
+                if (y > Math.Min(p1.Y, p2.Y))
+                {
+                    if (y <= Math.Max(p1.Y, p2.Y))
+                    {
+                        if (x <= Math.Max(p1.X, p2.X))
+                        {
+                            double xIntersection = (y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
+
+                            if (p1.X == p2.X || x <= xIntersection)
+                            {
+                                inside = !inside;
+                            }
+                        }
+                    }
+                }
+                p1 = p2;
+            }
+
+            return inside;
         }
 
         private void OnTextBoxFocusLost()

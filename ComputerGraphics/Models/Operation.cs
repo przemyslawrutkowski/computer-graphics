@@ -3,6 +3,7 @@
     public enum Operation
     {
         select,
+        drawTriangle,
         drawRectangle,
         drawEllipse,
         drawLine,

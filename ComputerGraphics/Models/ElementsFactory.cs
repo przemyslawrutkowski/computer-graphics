@@ -27,6 +27,17 @@ namespace ComputerGraphics.Models
                         Height = 0,
                     };
                     break;
+                case Operation.drawTriangle:
+                    uiElement = new Polygon
+                    {
+                        Stroke = Brushes.Black,
+                        StrokeThickness = 2,
+                        Points = new PointCollection
+                        {
+                            currentPosition, currentPosition, currentPosition
+                        }
+                    };
+                    break;
                 case Operation.drawEllipse:
                     uiElement = new Ellipse
                     {
@@ -60,11 +71,23 @@ namespace ComputerGraphics.Models
                     throw new NotSupportedException($"Operation type {operation} is not supported");
             }
 
-            return new Element(uiElement)
+            if (operation == Operation.drawTriangle)
             {
-                X = currentPosition.X,
-                Y = currentPosition.Y
-            };
+                return new Element(uiElement)
+                {
+                    X = 0,
+                    Y = 0
+                };
+            }
+            else
+            {
+                return new Element(uiElement)
+                {
+                    X = currentPosition.X,
+                    Y = currentPosition.Y
+                };
+            }
+
         }
     }
 }

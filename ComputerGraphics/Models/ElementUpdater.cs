@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace ComputerGraphics.Models
@@ -21,6 +22,29 @@ namespace ComputerGraphics.Models
                     rectangle.Height = Math.Abs(currentPosition.Y - initialPosition.Y);
                     element.X = Math.Min(initialPosition.X, currentPosition.X);
                     element.Y = Math.Min(initialPosition.Y, currentPosition.Y);
+                    break;
+                case Polygon triangle:
+                    if (triangle.Points.Count != 3)
+                    {
+                        throw new InvalidOperationException("Polygon must have exactly three points.");
+                    }
+
+                    var offsetX = currentPosition.X - initialPosition.X;
+                    var offsetY = currentPosition.Y - initialPosition.Y;
+
+
+                    if (currentPosition.Y <= initialPosition.Y)
+                    {
+                        triangle.Points[0] = new Point(initialPosition.X, initialPosition.Y);
+                        triangle.Points[1] = new Point(initialPosition.X + offsetX / 2, initialPosition.Y + offsetY);
+                        triangle.Points[2] = new Point(initialPosition.X + offsetX, initialPosition.Y);
+                    }
+                    else
+                    {
+                        triangle.Points[0] = new Point(initialPosition.X, initialPosition.Y + offsetY);
+                        triangle.Points[1] = new Point(initialPosition.X + offsetX / 2, initialPosition.Y);
+                        triangle.Points[2] = new Point(initialPosition.X + offsetX, initialPosition.Y + offsetY);
+                    }
                     break;
                 case Ellipse ellipse:
                     ellipse.Width = Math.Abs(currentPosition.X - initialPosition.X);
@@ -58,8 +82,21 @@ namespace ComputerGraphics.Models
             var offsetX = currentPosition.X - initialPosition.X;
             var offsetY = currentPosition.Y - initialPosition.Y;
 
-            element.X += offsetX;
-            element.Y += offsetY;
+            if (element.UIElement is Polygon triangle)
+            {
+                var newPoints = new PointCollection();
+                foreach (var point in triangle.Points)
+                {
+                    newPoints.Add(new Point(point.X + offsetX, point.Y + offsetY));
+                }
+                triangle.Points = newPoints;
+            }
+            else
+            {
+                element.X += offsetX;
+                element.Y += offsetY;
+            }
+
         }
     }
 }

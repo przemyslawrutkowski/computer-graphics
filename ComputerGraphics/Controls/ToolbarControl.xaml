@@ -11,6 +11,7 @@
         <ToolBarTray Background="Gray">
             <ToolBar>
                 <Button Content="Select" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.select}"/>
+                <Button Content="Triangle" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawTriangle}"/>
                 <Button Content="Rectangle" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawRectangle}"/>
                 <Button Content="Ellipse" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawEllipse}"/>
                 <Button Content="Line" Command="{Binding SetOperationCommand}" CommandParameter="{x:Static models:Operation.drawLine}"/>

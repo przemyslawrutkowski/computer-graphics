@@ -1,21 +1,18 @@
 ﻿using System.IO;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace ComputerGraphics.Services
 {
-    public interface IImagesService
+    public interface IImageService
     {
-        void SaveImage(Canvas canvas);
+        void SaveImage(RenderTargetBitmap bitmap);
 
     }
-    public class ImagesService : IImagesService
+    public class ImageService : IImageService
     {
-        public void SaveImage(Canvas canvas)
+        public void SaveImage(RenderTargetBitmap bitmap)
         {
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)canvas.ActualWidth, (int)canvas.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(canvas);
+
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.QualityLevel = 100;
             encoder.Frames.Add(BitmapFrame.Create(bitmap));

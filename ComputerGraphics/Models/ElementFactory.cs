@@ -5,12 +5,12 @@ using System.Windows.Shapes;
 
 namespace ComputerGraphics.Models
 {
-    public interface IElementsFactory
+    public interface IElementFactory
     {
         Element CreateElement(Operation operation, Point currentPosition);
     }
 
-    public class ElementsFactory : IElementsFactory
+    public class ElementFactory : IElementFactory
     {
         public Element CreateElement(Operation operation, Point currentPosition)
         {

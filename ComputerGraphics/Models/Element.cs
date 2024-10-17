@@ -29,9 +29,9 @@ namespace ComputerGraphics.Models
 
         public UIElement UIElement { get; set; }
 
-        public Element(UIElement UIElement)
+        public Element(UIElement uiElement)
         {
-            this.UIElement = UIElement;
+            UIElement = uiElement;
         }
 
     }

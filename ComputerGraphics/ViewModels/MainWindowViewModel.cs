@@ -4,10 +4,10 @@ namespace ComputerGraphics.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private ViewModelBase? _selectedViewModel;
+
         public GraphicsOperationsViewModel GraphicsOperationsViewModel { get; }
         public ColorSpacesViewModel ColorSpacesViewModel { get; }
-
-        private ViewModelBase? _selectedViewModel;
         public ViewModelBase? SelectedViewModel
         {
             get => _selectedViewModel;
@@ -17,7 +17,6 @@ namespace ComputerGraphics.ViewModels
                 RaisePropertyChanged();
             }
         }
-
         public DelegateCommand SelectViewModelCommand { get; }
 
         public MainWindowViewModel(GraphicsOperationsViewModel graphicsOperationsViewModel,
@@ -33,6 +32,5 @@ namespace ComputerGraphics.ViewModels
         {
             SelectedViewModel = parameter as ViewModelBase;
         }
-
     }
 }

@@ -12,26 +12,25 @@ namespace ComputerGraphics.ViewModels
 {
     public class GraphicsOperationsViewModel : ViewModelBase
     {
-        public ObservableCollection<Element> Elements { get; }
-        public DelegateCommand SetOperationCommand { get; }
-
         private readonly IElementFactory _elementsFactory;
         private readonly IElementUpdater _elementUpdater;
         private readonly IImageService _imageService;
-
         private Operation? _currentOperation;
         private Element? _selectedElement;
         private Point? _initialPosition;
         private Element? _textBox;
 
+        public ObservableCollection<Element> Elements { get; }
+        public DelegateCommand SetOperationCommand { get; }
+
         public GraphicsOperationsViewModel(IElementFactory elementFactory, IElementUpdater elementUpdater, IImageService imageService)
         {
-            Elements = new ObservableCollection<Element>();
-            SetOperationCommand = new DelegateCommand(SetOperation);
-
             _elementsFactory = elementFactory;
             _elementUpdater = elementUpdater;
             _imageService = imageService;
+
+            Elements = new ObservableCollection<Element>();
+            SetOperationCommand = new DelegateCommand(SetOperation);
         }
 
         private void SetOperation(object? parameter)

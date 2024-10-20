@@ -27,6 +27,7 @@ namespace ComputerGraphics
             services.AddTransient<IElementFactory, ElementFactory>();
             services.AddTransient<IElementUpdater, ElementUpdater>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IColorService, ColorService>();
         }
 
         protected override void OnStartup(StartupEventArgs e)

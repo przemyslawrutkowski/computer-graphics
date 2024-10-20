@@ -6,5 +6,80 @@
              xmlns:local="clr-namespace:ComputerGraphics.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TextBlock Text="Color Spaces View" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBar Grid.Row="0">
+            <Button Content="Converter"/>
+            <Button Content="RGB Cube"/>
+        </ToolBar>
+        <StackPanel Grid.Row="1" Margin="10" Orientation="Vertical">
+            <GroupBox Header="RGB" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Type RGB (R,G,B):"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox Width="50" Text="{Binding CurrentRGBColor.Red}"/>
+                        <TextBlock Text=", "/>
+                        <TextBox Width="50" Text="{Binding CurrentRGBColor.Green}"/>
+                        <TextBlock Text=", "/>
+                        <TextBox Width="50" Text="{Binding CurrentRGBColor.Blue}"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Convert" Command="{Binding ConvertCommand}" CommandParameter="{Binding CurrentRGBColor}"></Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="CMYK" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Type CMYK (C,M,Y,K):"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox Width="50" Text="{Binding CurrentCMYKColor.Cyan}"/>
+                        <TextBlock Text="%, "/>
+                        <TextBox Width="50" Text="{Binding CurrentCMYKColor.Magenta}"/>
+                        <TextBlock Text="%, "/>
+                        <TextBox Width="50" Text="{Binding CurrentCMYKColor.Yellow}"/>
+                        <TextBlock Text="%, "/>
+                        <TextBox Width="50" Text="{Binding CurrentCMYKColor.Black}"/>
+                        <TextBlock Text="%"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Convert" Command="{Binding ConvertCommand}" CommandParameter="{Binding CurrentCMYKColor}"></Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="HSV">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Type HSV (H,S,V):"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox Width="50" Text="{Binding CurrentHSVColor.Hue}"/>
+                        <TextBlock Text="°, "/>
+                        <TextBox Width="50" Text="{Binding CurrentHSVColor.Saturation}"/>
+                        <TextBlock Text="%, "/>
+                        <TextBox Width="50" Text="{Binding CurrentHSVColor.Value}"/>
+                        <TextBlock Text="%"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Convert" Command="{Binding ConvertCommand}" CommandParameter="{Binding CurrentHSVColor}"></Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Color Preview">
+                <Border Height="100" Background="{Binding SelectedColor}" BorderBrush="Black" BorderThickness="1"/>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
 </UserControl>

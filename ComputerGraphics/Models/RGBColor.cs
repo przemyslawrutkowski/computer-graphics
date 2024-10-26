@@ -4,15 +4,44 @@ namespace ComputerGraphics.Models
 {
     public class RGBColor : ViewModelBase
     {
-        public byte Red { get; set; }
-        public byte Green { get; set; }
-        public byte Blue { get; set; }
-
-        public RGBColor()
+        private byte _red;
+        public byte Red
         {
-            Red = 0;
-            Green = 0;
-            Blue = 0;
+            get => _red;
+            set
+            {
+                _red = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private byte _green;
+        public byte Green
+        {
+            get => _green;
+            set
+            {
+                _green = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private byte _blue;
+        public byte Blue
+        {
+            get => _blue;
+            set
+            {
+                _blue = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public void UpdateFrom(RGBColor other)
+        {
+            Red = other.Red;
+            Green = other.Green;
+            Blue = other.Blue;
         }
     }
 }

@@ -4,17 +4,56 @@ namespace ComputerGraphics.Models
 {
     public class CMYKColor : ViewModelBase
     {
-        public double Cyan { get; set; }
-        public double Magenta { get; set; }
-        public double Yellow { get; set; }
-        public double Black { get; set; }
-
-        public CMYKColor()
+        private double _cyan;
+        public double Cyan
         {
-            Cyan = 0;
-            Magenta = 0;
-            Yellow = 0;
-            Black = 0;
+            get => _cyan;
+            set
+            {
+                _cyan = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private double _magenta;
+        public double Magenta
+        {
+            get => _magenta;
+            set
+            {
+                _magenta = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private double _yellow;
+        public double Yellow
+        {
+            get => _yellow;
+            set
+            {
+                _yellow = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private double _black;
+        public double Black
+        {
+            get => _black;
+            set
+            {
+                _black = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public void UpdateFrom(CMYKColor other)
+        {
+            Cyan = other.Cyan;
+            Magenta = other.Magenta;
+            Yellow = other.Yellow;
+            Black = other.Black;
         }
     }
 }

@@ -4,15 +4,53 @@ namespace ComputerGraphics.Models
 {
     public class HSVColor : ViewModelBase
     {
-        public double Hue { get; set; }
-        public double Saturation { get; set; }
-        public double Value { get; set; }
+        private double _hue;
+        private double _saturation;
+        private double _value;
 
-        public HSVColor()
+        public double Hue
         {
-            Hue = 0;
-            Saturation = 0;
-            Value = 0;
+            get => _hue;
+            set
+            {
+                if (_hue != value)
+                {
+                    _hue = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        public double Saturation
+        {
+            get => _saturation;
+            set
+            {
+                if (_saturation != value)
+                {
+                    _saturation = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        public double Value
+        {
+            get => _value;
+            set
+            {
+                if (_value != value)
+                {
+                    _value = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+        public void UpdateFrom(HSVColor other)
+        {
+            Hue = other.Hue;
+            Saturation = other.Saturation;
+            Value = other.Value;
         }
     }
 }

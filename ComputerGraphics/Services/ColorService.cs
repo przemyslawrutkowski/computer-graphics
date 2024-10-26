@@ -48,37 +48,37 @@ namespace ComputerGraphics.Services
             double gPrime = 0;
             double bPrime = 0;
 
-            if (hsv.Hue >= 0 && hsv.Hue < 60)
+            if (h >= 0 && h < 60)
             {
                 rPrime = c;
                 gPrime = x;
                 bPrime = 0;
             }
-            else if (hsv.Hue >= 60 && hsv.Hue < 120)
+            else if (h >= 60 && h < 120)
             {
                 rPrime = x;
                 gPrime = c;
                 bPrime = 0;
             }
-            else if (hsv.Hue >= 120 && hsv.Hue < 180)
+            else if (h >= 120 && h < 180)
             {
                 rPrime = 0;
                 gPrime = c;
                 bPrime = x;
             }
-            else if (hsv.Hue >= 180 && hsv.Hue < 240)
+            else if (h >= 180 && h < 240)
             {
                 rPrime = 0;
                 gPrime = x;
                 bPrime = c;
             }
-            else if (hsv.Hue >= 240 && hsv.Hue < 300)
+            else if (h >= 240 && h < 300)
             {
                 rPrime = x;
                 gPrime = 0;
                 bPrime = c;
             }
-            else if (hsv.Hue >= 300 && hsv.Hue < 360)
+            else if (h >= 300 && h < 360)
             {
                 rPrime = c;
                 gPrime = 0;
@@ -91,7 +91,6 @@ namespace ComputerGraphics.Services
 
             return Color.FromRgb(r, g, b);
         }
-
 
         public RGBColor ConvertToRGB(Color color)
         {
@@ -110,6 +109,11 @@ namespace ComputerGraphics.Services
             double b = color.B / 255.0;
 
             double k = 1 - Math.Max(r, Math.Max(g, b));
+            if (k == 1.0)
+            {
+                return new CMYKColor { Cyan = 0, Magenta = 0, Yellow = 0, Black = 100 };
+            }
+
             double c = (1 - r - k) / (1 - k);
             double m = (1 - g - k) / (1 - k);
             double y = (1 - b - k) / (1 - k);
@@ -138,19 +142,25 @@ namespace ComputerGraphics.Services
             {
                 if (cMax == rPrime)
                 {
-                    h = 60 * ((gPrime - bPrime) / delta % 6);
+                    h = ((gPrime - bPrime) / delta) % 6;
                 }
                 else if (cMax == gPrime)
                 {
-                    h = 60 * ((bPrime - rPrime) / delta + 2);
+                    h = ((bPrime - rPrime) / delta) + 2;
                 }
                 else if (cMax == bPrime)
                 {
-                    h = 60 * ((rPrime - gPrime) / delta + 4);
+                    h = ((rPrime - gPrime) / delta) + 4;
+                }
+
+                h *= 60;
+                if (h < 0)
+                {
+                    h += 360;
                 }
             }
 
-            double s = cMax == 0 ? 0 : delta / cMax;
+            double s = cMax == 0 ? 0 : (delta / cMax);
             double v = cMax;
 
             return new HSVColor

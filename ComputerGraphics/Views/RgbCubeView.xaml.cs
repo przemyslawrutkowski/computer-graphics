@@ -2,9 +2,9 @@
 
 namespace ComputerGraphics.Views
 {
-    public partial class ColorSpacesView : UserControl
+    public partial class RgbCubeView : UserControl
     {
-        public ColorSpacesView()
+        public RgbCubeView()
         {
             InitializeComponent();
         }

@@ -8,6 +8,7 @@
         xmlns:viewModel="clr-namespace:ComputerGraphics.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:GraphicsOperationsViewModel}">
             <view:GraphicsOperationsView/>
@@ -16,15 +17,19 @@
             <view:ColorSpacesView/>
         </DataTemplate>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <Menu Grid.Row="0">
-            <MenuItem Header="_Graphics Operations" Command="{Binding SelectViewModelCommand}" CommandParameter="{Binding GraphicsOperationsViewModel}"/>
-            <MenuItem Header="_Color spaces" Command="{Binding SelectViewModelCommand}" CommandParameter="{Binding ColorSpacesViewModel}"/>
+            <MenuItem Header="_Graphics Operations" Command="{Binding SelectVMCommand}" CommandParameter="{Binding GraphicsOperationsVM}"/>
+            <MenuItem Header="_Color spaces" Command="{Binding SelectVMCommand}" CommandParameter="{Binding ColorSpacesVM}"/>
         </Menu>
-        <ContentControl Grid.Row="1" Content="{Binding SelectedViewModel}"/>
+        
+        <ContentControl Grid.Row="1" Content="{Binding SelectedVM}"/>
     </Grid>
+    
 </Window>

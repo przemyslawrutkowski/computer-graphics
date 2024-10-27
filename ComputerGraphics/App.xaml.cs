@@ -23,6 +23,9 @@ namespace ComputerGraphics
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<GraphicsOperationsViewModel>();
             services.AddTransient<ColorSpacesViewModel>();
+            services.AddTransient<ColorConverterViewModel>();
+            services.AddTransient<RgbCubeViewModel>();
+
 
             services.AddTransient<IElementFactory, ElementFactory>();
             services.AddTransient<IElementUpdater, ElementUpdater>();

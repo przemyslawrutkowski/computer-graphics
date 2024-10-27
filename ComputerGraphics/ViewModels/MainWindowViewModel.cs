@@ -4,33 +4,33 @@ namespace ComputerGraphics.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private ViewModelBase? _selectedViewModel;
+        private ViewModelBase? _selectedVM;
 
-        public GraphicsOperationsViewModel GraphicsOperationsViewModel { get; }
-        public ColorSpacesViewModel ColorSpacesViewModel { get; }
-        public ViewModelBase? SelectedViewModel
+        public GraphicsOperationsViewModel GraphicsOperationsVM { get; }
+        public ColorSpacesViewModel ColorSpacesVM { get; }
+        public ViewModelBase? SelectedVM
         {
-            get => _selectedViewModel;
+            get => _selectedVM;
             private set
             {
-                _selectedViewModel = value;
+                _selectedVM = value;
                 RaisePropertyChanged();
             }
         }
-        public DelegateCommand SelectViewModelCommand { get; }
+        public DelegateCommand SelectVMCommand { get; }
 
-        public MainWindowViewModel(GraphicsOperationsViewModel graphicsOperationsViewModel,
-            ColorSpacesViewModel colorSpacesViewModel)
+        public MainWindowViewModel(GraphicsOperationsViewModel graphicsOperationsVM,
+            ColorSpacesViewModel colorSpacesVM)
         {
-            GraphicsOperationsViewModel = graphicsOperationsViewModel;
-            ColorSpacesViewModel = colorSpacesViewModel;
-            SelectedViewModel = GraphicsOperationsViewModel;
-            SelectViewModelCommand = new DelegateCommand(SelectViewModel);
+            GraphicsOperationsVM = graphicsOperationsVM;
+            ColorSpacesVM = colorSpacesVM;
+            SelectedVM = GraphicsOperationsVM;
+            SelectVMCommand = new DelegateCommand(SelectVM);
         }
 
-        private void SelectViewModel(object? parameter)
+        private void SelectVM(object? parameter)
         {
-            SelectedViewModel = parameter as ViewModelBase;
+            SelectedVM = parameter as ViewModelBase;
         }
     }
 }

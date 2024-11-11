@@ -25,12 +25,15 @@ namespace ComputerGraphics
             services.AddTransient<ColorSpacesViewModel>();
             services.AddTransient<ColorConverterViewModel>();
             services.AddTransient<RgbCubeViewModel>();
-
+            services.AddTransient<FilesViewModel>();
 
             services.AddTransient<IElementFactory, ElementFactory>();
             services.AddTransient<IElementUpdater, ElementUpdater>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IAsyncImageService, ImageService>();
+            services.AddTransient<IAsyncImageService, ImageService>();
             services.AddTransient<IColorService, ColorService>();
+            services.AddTransient<CommandQueue>();
         }
 
         protected override void OnStartup(StartupEventArgs e)

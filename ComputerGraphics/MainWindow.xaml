@@ -16,6 +16,9 @@
         <DataTemplate DataType="{x:Type viewModel:ColorSpacesViewModel}">
             <view:ColorSpacesView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:FilesViewModel}">
+            <view:FilesView/>
+        </DataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -27,6 +30,7 @@
         <Menu Grid.Row="0">
             <MenuItem Header="_Graphics Operations" Command="{Binding SelectVMCommand}" CommandParameter="{Binding GraphicsOperationsVM}"/>
             <MenuItem Header="_Color spaces" Command="{Binding SelectVMCommand}" CommandParameter="{Binding ColorSpacesVM}"/>
+            <MenuItem Header="_Files" Command="{Binding SelectVMCommand}" CommandParameter="{Binding FilesVM}"/>
         </Menu>
         
         <ContentControl Grid.Row="1" Content="{Binding SelectedVM}"/>

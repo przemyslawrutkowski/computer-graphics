@@ -1,7 +1,6 @@
 ﻿using ComputerGraphics.Models;
 using ComputerGraphics.MVVM;
 using ComputerGraphics.Services;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -147,6 +146,10 @@ namespace ComputerGraphics.ViewModels
         public ICommand DivideRGBCommand { get; }
         public ICommand ChangeBrightnessCommand { get; }
         public ICommand ConvertGrayscaleCommand { get; }
+        public ICommand MedianFilterCommand { get; }
+        public ICommand SobelFilterCommand { get; }
+        public ICommand HighPassFilterCommand { get; }
+        public ICommand GaussianBlurCommand { get; }
         public ICommand ResetImageCommand { get; }
 
         public DigitalFiltersViewModel(IAsyncImageService imageService)
@@ -160,6 +163,10 @@ namespace ComputerGraphics.ViewModels
             DivideRGBCommand = new DelegateCommand(async _ => await DivideRGB(), _ => ProcessedImage != null);
             ChangeBrightnessCommand = new DelegateCommand(async _ => await ChangeBrightness(), _ => ProcessedImage != null);
             ConvertGrayscaleCommand = new DelegateCommand(async _ => await ConvertGrayscale(), _ => ProcessedImage != null);
+            MedianFilterCommand = new DelegateCommand(async _ => await ApplyMedianFilter(), _ => ProcessedImage != null);
+            SobelFilterCommand = new DelegateCommand(async _ => await ApplySobelFilter(), _ => ProcessedImage != null);
+            HighPassFilterCommand = new DelegateCommand(async _ => await ApplyHighPassFilter(), _ => ProcessedImage != null);
+            GaussianBlurCommand = new DelegateCommand(async _ => await ApplyGaussianBlur(), _ => ProcessedImage != null);
             ResetImageCommand = new DelegateCommand(ResetImage, _ => OriginalImage != null && ProcessedImage != null);
         }
 
@@ -273,6 +280,38 @@ namespace ComputerGraphics.ViewModels
             }
         }
 
+        private async Task ApplyMedianFilter()
+        {
+            if (ProcessedImage != null)
+            {
+                ProcessedImage = await _imageService.MedianFilterAsync(ProcessedImage);
+            }
+        }
+
+        private async Task ApplySobelFilter()
+        {
+            if (ProcessedImage != null)
+            {
+                ProcessedImage = await _imageService.SobelFilterAsync(ProcessedImage);
+            }
+        }
+
+        private async Task ApplyHighPassFilter()
+        {
+            if (ProcessedImage != null)
+            {
+                ProcessedImage = await _imageService.HighPassFilterAsync(ProcessedImage);
+            }
+        }
+
+        private async Task ApplyGaussianBlur()
+        {
+            if (ProcessedImage != null)
+            {
+                ProcessedImage = await _imageService.GaussianBlurAsync(ProcessedImage);
+            }
+        }
+
         private void ResetImage(object? parameter)
         {
             if (OriginalImage != null)
@@ -280,28 +319,6 @@ namespace ComputerGraphics.ViewModels
                 ProcessedImage = OriginalImage;
                 RaiseAllCanExecuteChanged();
             }
-        }
-
-        private WriteableBitmap BitmapImageToWriteableBitmap(BitmapImage bitmapImage)
-        {
-            return new WriteableBitmap(bitmapImage);
-        }
-
-        private BitmapImage WriteableBitmapToBitmapImage(WriteableBitmap writeableBitmap)
-        {
-            using MemoryStream ms = new MemoryStream();
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(writeableBitmap));
-            encoder.Save(ms);
-            ms.Position = 0;
-
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.StreamSource = ms;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-            return bitmapImage;
         }
 
         private void RaiseAllCanExecuteChanged()
@@ -313,6 +330,10 @@ namespace ComputerGraphics.ViewModels
             (DivideRGBCommand as DelegateCommand)?.RaiseCanExecuteChanged();
             (ChangeBrightnessCommand as DelegateCommand)?.RaiseCanExecuteChanged();
             (ConvertGrayscaleCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (MedianFilterCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (SobelFilterCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (HighPassFilterCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (GaussianBlurCommand as DelegateCommand)?.RaiseCanExecuteChanged();
             (ResetImageCommand as DelegateCommand)?.RaiseCanExecuteChanged();
         }
 

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ComputerGraphics.Views"
              xmlns:models="clr-namespace:ComputerGraphics.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="1000">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -77,14 +77,14 @@
                             <Label Content="Brightness:"/>
                             <Slider Minimum="-255" Maximum="255" Value="{Binding Brightness, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
                             <TextBox Text="{Binding Brightness, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
-                            <Button Content="Change Brightness" Command="{Binding ChangeBrightnessCommand}" Width="120"/>
+                            <Button Content="Change Brightness" Command="{Binding ChangeBrightnessCommand}" Width="150"/>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Convert to Grayscale" Margin="0,0,0,10">
                         <StackPanel>
                             <Label Content="Method:"/>
-                            <ComboBox SelectedValue="{Binding SelectedGrayscaleMethod}" SelectedValuePath="Tag" Margin="0,5,0,10">
+                            <ComboBox SelectedValue="{Binding SelectedGrayscaleMethod}" Margin="0,5,0,10">
                                 <ComboBoxItem Content="Average" Tag="{x:Static models:GrayscaleMethod.Average}"/>
                                 <ComboBoxItem Content="Red Channel" Tag="{x:Static models:GrayscaleMethod.RedChannel}"/>
                                 <ComboBoxItem Content="Green Channel" Tag="{x:Static models:GrayscaleMethod.GreenChannel}"/>
@@ -94,6 +94,30 @@
                                 <ComboBoxItem Content="Min Value" Tag="{x:Static models:GrayscaleMethod.MinValue}"/>
                             </ComboBox>
                             <Button Content="Convert to Grayscale" Command="{Binding ConvertGrayscaleCommand}" Width="150"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Median Filter" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Button Content="Apply Median Filter" Command="{Binding MedianFilterCommand}" Width="150"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Sobel Edge Detection" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Button Content="Apply Sobel Filter" Command="{Binding SobelFilterCommand}" Width="150"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="High-Pass Sharpening" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Button Content="Apply High-Pass Filter" Command="{Binding HighPassFilterCommand}" Width="180"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Gaussian Blur" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Button Content="Apply Gaussian Blur" Command="{Binding GaussianBlurCommand}" Width="150"/>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>

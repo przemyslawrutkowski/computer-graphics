@@ -9,6 +9,8 @@ namespace ComputerGraphics.ViewModels
         public GraphicsOperationsViewModel GraphicsOperationsVM { get; }
         public ColorSpacesViewModel ColorSpacesVM { get; }
         public FilesViewModel FilesVM { get; }
+        public DigitalFiltersViewModel DigitalFiltersVM { get; }
+
         public ViewModelBase? SelectedVM
         {
             get => _selectedVM;
@@ -21,11 +23,12 @@ namespace ComputerGraphics.ViewModels
         public DelegateCommand SelectVMCommand { get; }
 
         public MainWindowViewModel(GraphicsOperationsViewModel graphicsOperationsVM,
-            ColorSpacesViewModel colorSpacesVM, FilesViewModel filesVM)
+            ColorSpacesViewModel colorSpacesVM, FilesViewModel filesVM, DigitalFiltersViewModel digitalFiltersVM)
         {
             GraphicsOperationsVM = graphicsOperationsVM;
             ColorSpacesVM = colorSpacesVM;
             FilesVM = filesVM;
+            DigitalFiltersVM = digitalFiltersVM;
             SelectedVM = GraphicsOperationsVM;
             SelectVMCommand = new DelegateCommand(SelectVM);
         }

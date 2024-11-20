@@ -26,11 +26,11 @@ namespace ComputerGraphics
             services.AddTransient<ColorConverterViewModel>();
             services.AddTransient<RgbCubeViewModel>();
             services.AddTransient<FilesViewModel>();
+            services.AddTransient<DigitalFiltersViewModel>();
 
             services.AddTransient<IElementFactory, ElementFactory>();
             services.AddTransient<IElementUpdater, ElementUpdater>();
             services.AddTransient<IImageService, ImageService>();
-            services.AddTransient<IAsyncImageService, ImageService>();
             services.AddTransient<IAsyncImageService, ImageService>();
             services.AddTransient<IColorService, ColorService>();
             services.AddTransient<CommandQueue>();

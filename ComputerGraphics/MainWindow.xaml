@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type viewModel:FilesViewModel}">
             <view:FilesView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:DigitalFiltersViewModel}">
+            <view:DigitalFiltersView/>
+        </DataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -29,8 +32,9 @@
         
         <Menu Grid.Row="0">
             <MenuItem Header="_Graphics Operations" Command="{Binding SelectVMCommand}" CommandParameter="{Binding GraphicsOperationsVM}"/>
-            <MenuItem Header="_Color spaces" Command="{Binding SelectVMCommand}" CommandParameter="{Binding ColorSpacesVM}"/>
+            <MenuItem Header="_Color Spaces" Command="{Binding SelectVMCommand}" CommandParameter="{Binding ColorSpacesVM}"/>
             <MenuItem Header="_Files" Command="{Binding SelectVMCommand}" CommandParameter="{Binding FilesVM}"/>
+            <MenuItem Header="_Digital Filters" Command="{Binding SelectVMCommand}" CommandParameter="{Binding DigitalFiltersVM}"/>
         </Menu>
         
         <ContentControl Grid.Row="1" Content="{Binding SelectedVM}"/>

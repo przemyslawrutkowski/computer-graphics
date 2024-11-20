@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="ComputerGraphics.Views.DigitalFiltersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ComputerGraphics.Views"
+             xmlns:models="clr-namespace:ComputerGraphics.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBar Grid.Row="0">
+            <Button Content="Load Image" Command="{Binding LoadImageCommand}" Width="100" Margin="5"/>
+            <Button Content="Reset Image" Command="{Binding ResetImageCommand}" Width="100" Margin="5"/>
+        </ToolBar>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" Margin="10" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox Header="Add RGB" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Add R:"/>
+                            <TextBox Text="{Binding AddR, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Add G:"/>
+                            <TextBox Text="{Binding AddG, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Add B:"/>
+                            <TextBox Text="{Binding AddB, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Button Content="Add RGB" Command="{Binding AddRGBCommand}" Width="100"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Subtract RGB" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Subtract R:"/>
+                            <TextBox Text="{Binding SubtractR, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Subtract G:"/>
+                            <TextBox Text="{Binding SubtractG, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Subtract B:"/>
+                            <TextBox Text="{Binding SubtractB, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Button Content="Subtract RGB" Command="{Binding SubtractRGBCommand}" Width="100"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Multiply RGB" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Multiply R:"/>
+                            <TextBox Text="{Binding MultiplyR, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Multiply G:"/>
+                            <TextBox Text="{Binding MultiplyG, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Multiply B:"/>
+                            <TextBox Text="{Binding MultiplyB, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Button Content="Multiply RGB" Command="{Binding MultiplyRGBCommand}" Width="100"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Divide RGB" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Divide R:"/>
+                            <TextBox Text="{Binding DivideR, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Divide G:"/>
+                            <TextBox Text="{Binding DivideG, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Label Content="Divide B:"/>
+                            <TextBox Text="{Binding DivideB, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Button Content="Divide RGB" Command="{Binding DivideRGBCommand}" Width="100"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Change Brightness" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Brightness:"/>
+                            <Slider Minimum="-255" Maximum="255" Value="{Binding Brightness, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <TextBox Text="{Binding Brightness, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,10"/>
+                            <Button Content="Change Brightness" Command="{Binding ChangeBrightnessCommand}" Width="120"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Convert to Grayscale" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Label Content="Method:"/>
+                            <ComboBox SelectedValue="{Binding SelectedGrayscaleMethod}" SelectedValuePath="Tag" Margin="0,5,0,10">
+                                <ComboBoxItem Content="Average" Tag="{x:Static models:GrayscaleMethod.Average}"/>
+                                <ComboBoxItem Content="Red Channel" Tag="{x:Static models:GrayscaleMethod.RedChannel}"/>
+                                <ComboBoxItem Content="Green Channel" Tag="{x:Static models:GrayscaleMethod.GreenChannel}"/>
+                                <ComboBoxItem Content="Blue Channel" Tag="{x:Static models:GrayscaleMethod.BlueChannel}"/>
+                                <ComboBoxItem Content="Average of R+G" Tag="{x:Static models:GrayscaleMethod.AverageRG}"/>
+                                <ComboBoxItem Content="Max Value" Tag="{x:Static models:GrayscaleMethod.MaxValue}"/>
+                                <ComboBoxItem Content="Min Value" Tag="{x:Static models:GrayscaleMethod.MinValue}"/>
+                            </ComboBox>
+                            <Button Content="Convert to Grayscale" Command="{Binding ConvertGrayscaleCommand}" Width="150"/>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+
+            <GroupBox Header="Processed Image" Grid.Column="1" Margin="10">
+                <ScrollViewer>
+                    <Image Source="{Binding ProcessedImage}" Stretch="Uniform"/>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>
